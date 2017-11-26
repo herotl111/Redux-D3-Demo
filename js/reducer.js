@@ -7,7 +7,14 @@ function counter(state, action) {
         return Object.assign({},state,{
             count:state.count - 1
         });
-    }else{
+    }
+    else if(action.type === 'ADD_COUNT'){
+        state.countList.push(state.count);
+        return Object.assign({},state,{
+            countList: state.countList
+        });
+    }
+    else{
         return state;
     }
 }

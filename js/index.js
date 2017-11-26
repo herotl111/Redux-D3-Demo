@@ -3,20 +3,26 @@ var logger = reduxLogger.createLogger({
 });
 
 var initialState = {
-    count:0,
+    count:1,
     countList:[9,2,5,1,8]
 }
 
 store = Redux.createStore(counter,initialState,Redux.applyMiddleware(logger));
 
+//register renderer with global store
+store.subscribe(function(){
+    renderCharts("countBar",[store.getState().count]);
+});
+store.subscribe(function(){
+    renderCharts("barList",store.getState().countList);
+});
+store.subscribe(function(){
+    renderCount(store.getState().count.toString());
+});
 
-function renderCount() {
-    document.getElementById('value').innerHTML = store.getState().count.toString();
-}
-renderCount();
+store.dispatch(initializeState());
 
-store.subscribe(renderCount);
-
+//Add event listeners
 document.getElementById('increment')
     .addEventListener('click', function () {
         store.dispatch(increment());
@@ -27,25 +33,11 @@ document.getElementById('decrement')
     });
 document.getElementById('incrementIfOdd')
     .addEventListener('click', function () {
-        if (store.getState() % 2 !== 0) {
+        if (store.getState().count % 2 !== 0) {
             store.dispatch(increment());
         }
     });
-document.getElementById('incrementAsync')
+document.getElementById('add')
     .addEventListener('click', function () {
-        setTimeout(function () {
-            store.dispatch(increment())
-        }, 1000);
+        store.dispatch(addCount());
     });
-
-function renderCharts(dataset){
-    d3.select("#charts").selectAll("div")
-        .data(dataset)
-        .enter()
-        .append("div")
-        .attr("class", "bar")
-        .style("height", function(d) {
-            var barHeight = d * 5;
-            return barHeight + "px";
-        });
-}
