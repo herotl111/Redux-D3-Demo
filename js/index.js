@@ -7,7 +7,7 @@ var initialState = {
     countList:[9,2,5,1,8]
 }
 
-store = Redux.createStore(counter,initialState,Redux.applyMiddleware(logger));
+store = Redux.createStore(counter,initialState,Redux.applyMiddleware(ReduxThunk.default,logger));
 
 //register renderer with global store
 store.subscribe(function(){
@@ -40,4 +40,9 @@ document.getElementById('incrementIfOdd')
 document.getElementById('add')
     .addEventListener('click', function () {
         store.dispatch(addCount());
+    });
+
+document.getElementById('addAsync')
+    .addEventListener('click', function () {
+        store.dispatch(asyncAddCount());
     });
